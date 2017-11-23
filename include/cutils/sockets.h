@@ -41,7 +41,7 @@ typedef int cutils_socket_t;
 #endif
 
 #define ANDROID_SOCKET_ENV_PREFIX	"ANDROID_SOCKET_"
-#define ANDROID_SOCKET_DIR		"/dev/socket"
+#define ANDROID_SOCKET_DIR		"/socket"
 
 #ifdef __cplusplus
 extern "C" {
