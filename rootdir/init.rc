@@ -683,4 +683,4 @@ service flash_recovery /system/bin/install-recovery.sh
 service sensorservice /system/bin/sensorservice
     class main
     user system
-    group system
+    group system input log compass
