@@ -414,7 +414,6 @@ static void import_late(const std::vector<std::string>& args, size_t start_index
     if (false) DumpState();
 }
 
-#if 0
 /* mount_fstab
  *
  *  Call fs_mgr_mount_all() to mount the given fstab
@@ -463,7 +462,6 @@ static int mount_fstab(const char* fstabfile, int mount_mode) {
     }
     return ret;
 }
-#endif
 
 /* Queue event based on fs_mgr return code.
  *
@@ -540,7 +538,7 @@ static int do_mount_all(const std::vector<std::string>& args) {
     bool import_rc = true;
     bool queue_event = true;
     int mount_mode = MOUNT_MODE_DEFAULT;
-    //const char* fstabfile = args[1].c_str();
+    const char* fstabfile = args[1].c_str();
     std::size_t path_arg_end = args.size();
     const char* prop_post_fix = "default";
 
@@ -560,16 +558,13 @@ static int do_mount_all(const std::vector<std::string>& args) {
 
     std::string prop_name = "ro.boottime.init.mount_all."s + prop_post_fix;
     android::base::Timer t;
-    //int ret =  mount_fstab(fstabfile, mount_mode); // hybris
-    int ret = 0;
+    int ret =  mount_fstab(fstabfile, mount_mode);
     property_set(prop_name, std::to_string(t.duration().count()));
 
     if (import_rc) {
         /* Paths of .rc files are specified at the 2nd argument and beyond */
         import_late(args, 2, path_arg_end);
     }
-
-    queue_event = false; // hybris does trigger_late_start.
 
     if (queue_event) {
         /* queue_fs_event will queue event based on mount_fstab return code
