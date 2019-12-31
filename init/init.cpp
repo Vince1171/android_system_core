@@ -322,10 +322,12 @@ ret:
     return result;
 }
 
+/*
 static void security_failure() {
     LOG(ERROR) << "Security failure...";
     panic();
 }
+*/
 
 static bool set_highest_available_option_value(std::string path, int min, int max)
 {
@@ -572,7 +574,7 @@ static void selinux_init_all_handles(void)
 
 enum selinux_enforcing_status { SELINUX_PERMISSIVE, SELINUX_ENFORCING };
 
-static selinux_enforcing_status selinux_status_from_cmdline() {
+/*static selinux_enforcing_status selinux_status_from_cmdline() {
     selinux_enforcing_status status = SELINUX_ENFORCING;
 
     import_kernel_cmdline(false, [&](const std::string& key, const std::string& value, bool in_qemu) {
@@ -592,7 +594,8 @@ static bool selinux_is_enforcing(void)
     return true;
 }
 
-static int audit_callback(void *data, security_class_t /*cls*/, char *buf, size_t len) {
+
+static int audit_callback(void *data, security_class_t , char *buf, size_t len) {
 
     property_audit_data *d = reinterpret_cast<property_audit_data*>(data);
 
@@ -605,6 +608,7 @@ static int audit_callback(void *data, security_class_t /*cls*/, char *buf, size_
             d->cr->pid, d->cr->uid, d->cr->gid);
     return 0;
 }
+*/
 
 /*
  * Forks, executes the provided program in the child, and waits for the completion in the parent.
@@ -873,7 +877,7 @@ static bool selinux_load_policy() {
 }
 
 static void selinux_initialize(bool in_kernel_domain) {
-    // Disable in Mer
+    // Disable in Halium
     return;
 
     Timer t;
@@ -1049,13 +1053,13 @@ int main(int argc, char** argv) {
         SetInitAvbVersionInRecovery();
 
         // Set up SELinux, loading the SELinux policy.
-        selinux_initialize(true);
+        //selinux_initialize(true);
 
         // We're in the kernel domain, so re-exec init to transition to the init domain now
         // that the SELinux policy has been loaded.
         if (selinux_android_restorecon("/init", 0) == -1) {
             PLOG(ERROR) << "restorecon failed";
-            security_failure();
+            //security_failure();
         }
 
         setenv("INIT_SECOND_STAGE", "true", 1);
@@ -1071,7 +1075,7 @@ int main(int argc, char** argv) {
         // execv() only returns if an error happened, in which case we
         // panic and never fall through this conditional.
         PLOG(ERROR) << "execv(\"" << path << "\") failed";
-        security_failure();
+        //security_failure();
     }
 
     // At this point we're in the second stage of init.
