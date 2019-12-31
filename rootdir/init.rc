@@ -14,7 +14,7 @@ import /init.environ.rc
 #import /init.usb.rc
 import /init.${ro.hardware}.rc
 import /vendor/etc/init/hw/init.${ro.hardware}.rc
-import /init.${ro.zygote}.rc
+#import /init.${ro.zygote}.rc
 
 on early-init
     # Set init and its forked children's oom_adj.
@@ -36,7 +36,7 @@ on early-init
     mount cgroup none /acct cpuacct
     mkdir /acct/uid
 
-    start ueventd
+    # start ueventd
 
 on init
     sysclktz 0
@@ -507,8 +507,7 @@ on post-fs-data
     mkdir /data/cache/backup_stage 0700 system system
     mkdir /data/cache/backup 0700 system system
 
-    # Requires vold which is is not needed in Mer
-    #init_user0
+    init_user0
 
     # Set SELinux security contexts on upgrade or policy update.
     restorecon --recursive --skip-ce /data
@@ -717,12 +716,13 @@ service ueventd /sbin/ueventd
     critical
     seclabel u:r:ueventd:s0
     shutdown critical
+# Not used by Halium - spams logs
 
 service healthd /system/bin/healthd
     class core
     critical
     group root system wakelock
-# Not used by Mer - spams logs and small battery drain
+# Not used by Halium - spams logs and small battery drain
     disabled
 
 service console /system/bin/sh
