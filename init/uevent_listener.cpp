@@ -208,6 +208,10 @@ void UeventListener::Poll(const ListenerCallback& callback,
             PLOG(ERROR) << "poll() of uevent socket failed, continuing";
             continue;
         }
+        if (ufd.revents & POLLERR) {
+               PLOG(ERROR) << ("got POLLERR, terminating ueventd\n";
+               exit(1);
+        }
         if (ufd.revents & POLLIN) {
             // We're non-blocking, so if we receive a poll event keep processing until
             // we have exhausted all uevent messages.
