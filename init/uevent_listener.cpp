@@ -209,7 +209,7 @@ void UeventListener::Poll(const ListenerCallback& callback,
             continue;
         }
         if (ufd.revents & POLLERR) {
-               PLOG(ERROR) << ("got POLLERR, terminating ueventd\n";
+               PLOG(ERROR) << "got POLLERR, terminating ueventd\n";
                exit(1);
         }
         if (ufd.revents & POLLIN) {

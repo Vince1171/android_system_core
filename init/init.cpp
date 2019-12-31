@@ -433,7 +433,7 @@ static int set_mmap_rnd_bits_action(const std::vector<std::string>& args)
 
     if (ret == -1) {
         LOG(ERROR) << "Unable to set adequate mmap entropy value!";
-        security_failure();
+        //security_failure();
     }
     return ret;
 }
@@ -452,7 +452,7 @@ static int set_kptr_restrict_action(const std::vector<std::string>& args)
 
     if (!set_highest_available_option_value(path, KPTR_RESTRICT_MINVALUE, KPTR_RESTRICT_MAXVALUE)) {
         LOG(ERROR) << "Unable to set adequate kptr_restrict value!";
-        security_failure();
+        //security_failure();
     }
     return 0;
 }
@@ -565,12 +565,12 @@ static int queue_property_triggers_action(const std::vector<std::string>& args)
     return 0;
 }
 
-static void selinux_init_all_handles(void)
+/*static void selinux_init_all_handles(void)
 {
     sehandle = selinux_android_file_context_handle();
     selinux_android_set_sehandle(sehandle);
     sehandle_prop = selinux_android_prop_context_handle();
-}
+}*/
 
 enum selinux_enforcing_status { SELINUX_PERMISSIVE, SELINUX_ENFORCING };
 
@@ -616,6 +616,7 @@ static int audit_callback(void *data, security_class_t , char *buf, size_t len) 
  *
  * Returns true if the child exited with status code 0, returns false otherwise.
  */
+/*
 static bool fork_execve_and_wait_for_completion(const char* filename, char* const argv[],
                                                 char* const envp[]) {
     // Create a pipe used for redirecting child process's output.
@@ -705,19 +706,10 @@ static bool fork_execve_and_wait_for_completion(const char* filename, char* cons
         return false;
     }
 }
+*/
 
-static bool read_first_line(const char* file, std::string* line) {
-    line->clear();
 
-    std::string contents;
-    if (!android::base::ReadFileToString(file, &contents, true /* follow symlinks */)) {
-        return false;
-    }
-    std::istringstream in(contents);
-    std::getline(in, *line);
-    return true;
-}
-
+/*
 static bool selinux_find_precompiled_split_policy(std::string* file) {
     file->clear();
 
@@ -758,17 +750,21 @@ static bool selinux_get_vendor_mapping_version(std::string* plat_vers) {
         return false;
     }
     return true;
+
+
 }
+*/
 
-static constexpr const char plat_policy_cil_file[] = "/system/etc/selinux/plat_sepolicy.cil";
+// static constexpr const char plat_policy_cil_file[] = "/system/etc/selinux/plat_sepolicy.cil";
 
-static bool selinux_is_split_policy_device() { return access(plat_policy_cil_file, R_OK) != -1; }
+//static bool selinux_is_split_policy_device() { return access(plat_policy_cil_file, R_OK) != -1; }
 
 /*
  * Loads SELinux policy split across platform/system and non-platform/vendor files.
  *
  * Returns true upon success, false otherwise (failure cause is logged).
  */
+/*
 static bool selinux_load_split_policy() {
     // IMPLEMENTATION NOTE: Split policy consists of three CIL files:
     // * platform -- policy needed due to logic contained in the system image,
@@ -851,12 +847,14 @@ static bool selinux_load_split_policy() {
 
     return true;
 }
+*/
 
 /*
  * Loads SELinux policy from a monolithic file.
  *
  * Returns true upon success, false otherwise (failure cause is logged).
  */
+/*
 static bool selinux_load_monolithic_policy() {
     LOG(VERBOSE) << "Loading SELinux policy from monolithic file";
     if (selinux_android_load_policy() < 0) {
@@ -865,18 +863,22 @@ static bool selinux_load_monolithic_policy() {
     }
     return true;
 }
+*/
 
 /*
  * Loads SELinux policy into the kernel.
  *
  * Returns true upon success, false otherwise (failure cause is logged).
  */
+
+/*
 static bool selinux_load_policy() {
     return selinux_is_split_policy_device() ? selinux_load_split_policy()
                                             : selinux_load_monolithic_policy();
 }
+*/
 
-static void selinux_initialize(bool in_kernel_domain) {
+/*static void selinux_initialize(bool in_kernel_domain) {
     // Disable in Halium
     return;
 
@@ -899,14 +901,14 @@ static void selinux_initialize(bool in_kernel_domain) {
         if (kernel_enforcing != is_enforcing) {
             if (security_setenforce(is_enforcing)) {
                 PLOG(ERROR) << "security_setenforce(%s) failed" << (is_enforcing ? "true" : "false");
-                security_failure();
+                //security_failure();
             }
         }
 
         std::string err;
         if (!WriteFile("/sys/fs/selinux/checkreqprot", "0", &err)) {
             LOG(ERROR) << err;
-            security_failure();
+            //security_failure();
         }
 
         // init's first stage can't set properties, so pass the time to the second stage.
@@ -915,6 +917,7 @@ static void selinux_initialize(bool in_kernel_domain) {
         selinux_init_all_handles();
     }
 }
+*/
 
 // The files and directories that were created before initial sepolicy load or
 // files on ramdisk need to have their security context restored to the proper
@@ -1119,7 +1122,7 @@ int main(int argc, char** argv) {
     unsetenv("INIT_AVB_VERSION");
 
     // Now set up SELinux for second stage.
-    selinux_initialize(false);
+    //selinux_initialize(false);
     selinux_restore_context();
 
     epoll_fd = epoll_create1(EPOLL_CLOEXEC);
